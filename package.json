@@ -1,0 +1,29 @@
+{
+  "name": "go-solar",
+  "version": "1.0.0",
+  "description": "Calculate savings using solar energy",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "server": "nodemon server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manueltiburcio/go-solar.git"
+  },
+  "author": "Manuel Tiburcio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manueltiburcio/go-solar/issues"
+  },
+  "homepage": "https://github.com/manueltiburcio/go-solar#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "mongoose": "^6.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
