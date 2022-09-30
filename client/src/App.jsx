@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Routes, Route, Link } from "react-router-dom";
 import Container from '@mui/material/Container';
-import Form from './components/Form';
 import Create from './components/Reports/Create';
 import Reports from './components/Reports/Reports';
 import Layout from './components/Layout';
@@ -12,6 +11,12 @@ import Login from './components/Login/Login.jsx';
 import SignUp from './components/Login/SignUp.jsx';
 import Solar500 from './data/Solar500.js';
 import FinalSolar from './data/FinalSolar.js';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+
 
 const theme = createTheme({
   typography: {
@@ -43,9 +48,7 @@ function App() {
   });
 
   const [reportData, setReportData] = useState({
-    id: '1',
     userEmail: '',
-    createdAt: 'Wednesday 2022',
     outputs: [],
     address: '16  Hawksmoor',
     cost: '144',
@@ -75,9 +78,15 @@ function App() {
     email: '',
     password: '',
   })
+
+
+  const [reportsList, setReportsList] = useState([]);
+
   const [report, setReport] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { address, kwh, cost } = formData;
   const { loginEmail, loginPassword } = loginData;
@@ -127,16 +136,14 @@ function App() {
     let inverter2kwQty = Math.ceil(solarSize * 0.82 / 3000);
 
     let trees = Math.floor(solarSize * 180 / 7000);
-    console.log(trees);
+
 
     setReportData({
-      id: '1',
-      createdAt: 'Wednesday 2022',
       outputs: FinalSolar.outputs,
       address: '16  Hawksmoor',
       cost: '144',
       kwh: '60',
-      trees: '',
+      trees,
       initialPrediction,
       kwhConsumption,
       monthlyBill,
@@ -153,12 +160,16 @@ function App() {
   }
 
   useEffect(() => {
-    sumAll();
   }, []);
 
-  const handleSubmitLogin = (e) => {
+  const handleSubmitLogin = async (e) => {
     e.preventDefault();
     searchUser();
+    let data = await getUserReports(loginEmail);
+    if (data) {
+      setLoading(false);
+      setReportsList(data);
+    }
   }
 
   const handleChangeLogin = (e) => {
@@ -187,9 +198,15 @@ function App() {
     }))
   }
 
-  const handleReportSubmit = (e) => {
+  const handleReportSubmit = async (e) => {
     e.preventDefault();
+
+    await createUserReport();
+    let newReport = await getUserReports(loginEmail);
+
+    setReportsList(newReport);
     navigate('/reports');
+
   }
 
   const handleChange = (e) => {
@@ -199,15 +216,104 @@ function App() {
     }))
   }
 
-  const getData = async () => {
+  const createUserReport = async () => {
+
+    // let geo = await getLocation(formData.address);
+
+    //let eng = await getData(location.lat, location.lon, 500);
+
+    let initialPrediction = 0;
+
+    // initial 500 to check how much is left to pay using monthly bill and energy monthly
+    Solar500.outputs.forEach((item) => {
+      initialPrediction += item.wh;
+    })
+
+    // monthly energy used
+    let kwhConsumption = 443;
+
+    // monthly electricty bill
+    let monthlyBill = 120;
+
+    // yearly energy used
+    let kwhYear = kwhConsumption * 12;
+
+
+    // divide initial by 1000 to convert from wh to kWh
+    let solarSize = kwhYear / (initialPrediction / 1000) * 500;
+    solarSize = Math.ceil(solarSize);
+
+    //let finalPred = await getData(location.lat, location.lon, solarSize);
+
+    // cost of kwh
+    let costkWh = monthlyBill / kwhConsumption;
+
+    let annualSolar = 0;
+
+    // initial 500 to check how much is left to pay using monthly bill and energy monthly
+    FinalSolar.outputs.forEach((item) => {
+      annualSolar += item.wh;
+    })
+
+    // convert to kWh
+    annualSolar = annualSolar / 1000;
+    annualSolar = annualSolar * costkWh;
+
+    let panel300Qty = Math.ceil(solarSize / 300);
+    let panel500Qty = Math.ceil(solarSize / 500);
+
+    let inverter1kwQty = Math.ceil(solarSize * 0.82 / 1000);
+    let inverter3kwQty = Math.ceil(solarSize * 0.82 / 3000);
+
+    let trees = Math.floor(solarSize * 180 / 7000);
+
+
+    let data = {
+      userEmail: loginEmail,
+      outputs: FinalSolar.outputs,
+      address: '21402 Arborwood, Lake Forest',
+      cost: 144,
+      kwh: 60,
+      trees,
+      initialPrediction,
+      kwhConsumption,
+      monthlyBill,
+      kwhYear,
+      solarSize,
+      costkWh,
+      annualSolar,
+      panel300Qty,
+      panel500Qty,
+      inverter1kwQty,
+      inverter3kwQty,
+    }
+
+
+    await axios.post('http://localhost:5000/reports/create', data);
+    alert('created report');
+  }
+
+  const getUserReports = async (email) => {
+    let response = await axios.post('http://localhost:5000/reports', { userEmail: email });
+    return response.data;
+  }
+
+  const handleDelete = async (id) => {
+    let response = await axios.delete(`http://localhost:5000/reports/${id}`,);
+    let updateReports = await getUserReports(loginEmail);
+
+    setReportsList(updateReports);
+  }
+
+  const getData = async (lat, lon, wp) => {
 
     const options = {
       method: 'GET',
       url: 'https://solarenergyprediction.p.rapidapi.com/v2.0/solar/estimation',
       params: {
-        lat: '33.5890841',
-        lon: '-117.717123',
-        wp: '3034',
+        lat,
+        lon,
+        wp,
         deg: '34',
         az: '0',
         loss: '14'
@@ -221,8 +327,16 @@ function App() {
 
     let response = await axios.request(options);
 
-    console.log('api data', response.data);
+    return response.data;
   }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const searchUser = async () => {
     let response = await axios.post('http://localhost:5000/users', { email: loginEmail, password: loginPassword });
@@ -230,10 +344,10 @@ function App() {
       setUserName(response.data.name);
       setLoggedIn(true);
       navigate('/reports');
-    } else {
-      console.log('wrong credentials!');
     }
   }
+
+
 
   const createUser = async () => {
     let response = await axios.post('http://localhost:5000/users/create', {
@@ -242,7 +356,6 @@ function App() {
       email,
       password,
     });
-    console.log(response.data);
   }
 
   const getLocation = async (address) => {
@@ -255,10 +368,8 @@ function App() {
         'X-RapidAPI-Host': 'geocode-forward-and-reverse.p.rapidapi.com'
       }
     };
-
     let response = await axios.request(options);
-
-    console.log(response.data);
+    return response.data;
   }
 
 
@@ -269,7 +380,7 @@ function App() {
           <Route path="/" element={<Login handleSubmitLogin={handleSubmitLogin} handleChangeLogin={handleChangeLogin} loginData={loginData} />} />
           <Route path="/signup" element={<SignUp handleSubmitSign={handleSubmitSign} handleChangeSign={handleChangeSign} signData={signData} />} />
           <Route path="/create" element={<Create formData={formData} handleChange={handleChange} handleReportSubmit={handleReportSubmit} />} />
-          <Route path="/reports" element={<Reports formData={formData} reportData={reportData} />} />
+          <Route path="/reports" element={<Reports reportsList={reportsList} formData={formData} reportData={reportData} loading={loading} handleDelete={handleDelete} />} />
         </Routes>
       </Layout>
     </ThemeProvider >

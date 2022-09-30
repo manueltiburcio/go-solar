@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 const reportSchema = mongoose.Schema({
   userEmail: String,
-  createdAt: String,
-  outputs: [],
+  outputs: Array,
   address: String,
   cost: Number,
   kwh: Number,

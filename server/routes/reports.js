@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { getReports, createReport, deleteReport } = require('../controllers/reports');
 
-router.get('/', getReports);
+router.post('/', getReports);
 
-router.post('/', createReport);
+router.post('/create', createReport);
 
 router.delete('/:id', deleteReport)
 

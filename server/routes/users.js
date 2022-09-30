@@ -6,6 +6,6 @@ router.post('/', getUser);
 
 router.post('/create', createUser);
 
-router.delete('/', deleteUser);
+router.delete('/:id', deleteUser);
 
 module.exports = router;

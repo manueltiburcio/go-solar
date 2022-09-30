@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Typography, Container, Link, Grid, Card, Box } from '@mui/material';
@@ -10,6 +9,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import videoBg from '../../assets/videoBg.mov';
 import { Fade } from '@mui/material';
+import Backdrop from '@mui/material/Backdrop';
 
 function Copyright(props) {
   return (
@@ -28,6 +28,8 @@ const theme = createTheme();
 
 const classes = {
   main: {
+    width: '100%',
+    heigth: '100vh',
     overflowY: 'hidden',
     overflowX: 'hidden',
   },
@@ -35,23 +37,18 @@ const classes = {
     cursor: 'pointer',
   },
   video: {
+    zIndex: 1,
     width: '100%',
     height: '100%',
     objectFit: 'cover',
   },
-  content: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-  },
   overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
+    zIndex: 2,
+    position: 'relative',
+    bottom: 200,
     width: '100%',
     height: '100%',
-    zIndex: '5',
-    backgroundColor: 'rgba(0,0,0,.4)',
+    backgroundColor: 'rgba(0, 0, 0, .5)',
   },
   form: {
     borderRadius: 1,
@@ -69,7 +66,7 @@ const classes = {
     overflowY: 'hidden',
     overflowX: 'hidden',
     transition: 'ease-in',
-  }
+  },
 }
 
 export default function Login({ handleSubmitLogin, handleChangeLogin, loginData }) {

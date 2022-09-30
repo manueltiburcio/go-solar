@@ -4,8 +4,6 @@ const getUser = async (req, res) => {
 
   const { email, password } = req.body;
 
-
-
   const foundEmail = await User.findOne({ email });
   const foundPassword = await User.findOne({ password });
 

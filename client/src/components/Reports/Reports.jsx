@@ -1,40 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import FinalSolar from '../../data/FinalSolar.js';
 import Container from '@mui/material/Container';
 import ReportCard from '../ReportCard.jsx';
-import solarData from '../../data/Solar.js';
+import { Typography } from '@mui/material';
 
-function Reports({ formData, reportData }) {
-  const [reportsList, setReportsList] = useState([]);
-  const [reports, setReports] = useState([FinalSolar]);
+function Reports({ loading, reportsList, formData, reportData, handleDelete }) {
+  const [empty, setEmpty] = useState(true);
 
-  console.log('reportData', reportData);
-
-
-  const handleDelete = async (month) => {
-    const newReports = reports.filter((report) => report.month !== month);
-    setReports(newReports);
-  }
-
-
+  useEffect(() => {
+    if (Array.isArray(reportsList)) {
+      setEmpty(false);
+    }
+  }, [reportsList]);
 
   return (
     <Container>
       <Grid container>
-        {reports.map((item) => {
-          let id = Math.random();
-          return <Grid key={id}>
-            <ReportCard
-              report={item}
-              solarData={solarData}
-              formData={formData}
-              reportData={reportData}
-              handleDelete={handleDelete}
-            ></ReportCard>
-          </Grid>
-        })}
+        {empty ? <Typography variant='h4'>It seems there's no savings reports created yet!</Typography> :
+
+          reportsList.map((item) => {
+            return (
+              <Grid key={item._id} sx={{ mb: 3 }}>
+                <ReportCard
+                  id={item._id}
+                  reportData={item}
+                  handleDelete={handleDelete}
+                ></ReportCard>
+              </Grid>
+            )
+          })
+
+        }
+
+        {/* {loading ? <Box sx={{ display: 'flex' }}>
+          <CircularProgress />
+        </Box>
+
+          :
+
+          reportsList.map((item) => {
+            return (
+              <Grid key={item._id}>
+                <ReportCard
+                  id={item._id}
+                  reportData={item}
+                ></ReportCard>
+              </Grid>
+            )
+          })
+
+        } */}
+
+
+        {/* {!loading ? reportsList.map((item) => {
+          return (
+            <Grid key={item._id}>
+              <ReportCard
+                id={item._id}
+                reportData={item}
+              ></ReportCard>
+            </Grid>
+          )
+        })
+          :
+          <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box>
+        } */}
       </Grid >
     </Container>
   )
