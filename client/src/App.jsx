@@ -319,7 +319,7 @@ function App() {
         loss: '14'
       },
       headers: {
-        'X-RapidAPI-Key': '8773cbcb94msh62d3e6b171ddb4cp1774bajsn6dc6e8b83dda',
+        'X-RapidAPI-Key': '',
         'X-RapidAPI-Host': 'solarenergyprediction.p.rapidapi.com'
       }
 
@@ -364,7 +364,7 @@ function App() {
       url: 'https://geocode-forward-and-reverse.p.rapidapi.com/forward',
       params: { address: address },
       headers: {
-        'X-RapidAPI-Key': '8773cbcb94msh62d3e6b171ddb4cp1774bajsn6dc6e8b83dda',
+        'X-RapidAPI-Key': '',
         'X-RapidAPI-Host': 'geocode-forward-and-reverse.p.rapidapi.com'
       }
     };
