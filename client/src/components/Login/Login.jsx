@@ -67,6 +67,22 @@ const classes = {
     overflowX: 'hidden',
     transition: 'ease-in',
   },
+  title: {
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifiyContent: 'center',
+    fontSize: '26px',
+    textShadow: '2px 2px 2px gray',
+    left: '50%',
+    top: '10%',
+    transform: 'translate(-50%, -50%)',
+  },
+  guestBtn: {
+    backgroundColor: '#2E3B55',
+    color: 'white',
+    marginBottom: 2,
+  }
 }
 
 export default function Login({ handleSubmitLogin, handleChangeLogin, loginData }) {
@@ -83,8 +99,8 @@ export default function Login({ handleSubmitLogin, handleChangeLogin, loginData 
       setDelay(true);
     }, 500)
     setTimeout(() => {
-      setDelay(true);
-    }, 800)
+      setTitleDelay(true);
+    }, 1000)
   }, []);
 
   return (
@@ -93,8 +109,9 @@ export default function Login({ handleSubmitLogin, handleChangeLogin, loginData 
       <video className={classes.video} src={videoBg} autoPlay loop muted />
 
       <Fade in={titleDelay}>
-        <Typography variant='body2' color='textSecondary'>Calculate your savings using solar energy</Typography>
+        <Typography sx={classes.title} variant='h4' color='#D3D3D3'>Calculate your savings using solar energy</Typography>
       </Fade>
+
 
       <Fade in={delay}>
 
@@ -135,6 +152,13 @@ export default function Login({ handleSubmitLogin, handleChangeLogin, loginData 
               sx={{ mt: 3, mb: 2 }}
             >
               Log In
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={classes.guestBtn}
+            >
+              Enter as a Guest
             </Button>
             <Grid container>
               <Grid item>

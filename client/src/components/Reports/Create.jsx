@@ -12,6 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import Paper from '@mui/material/Paper';
 import InputAdornment from '@mui/material/InputAdornment';
 
+
 const classes = {
   title: {
     color: '#404040',
@@ -56,14 +57,19 @@ const classes = {
   }
 }
 
-function Create({ formData, handleChange, handleReportSubmit }) {
+function Create({ formData, handleChange, handleReportSubmit, open, setOpen }) {
 
   const { address, kwh, cost } = formData;
   const [category, setCategory] = useState('solar');
 
 
+
+
+
   return (
     <Container>
+
+
       <Paper variant='outlined' sx={classes.paper}>
         <Typography
           sx={classes.title}

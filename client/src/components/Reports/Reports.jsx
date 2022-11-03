@@ -3,8 +3,10 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import ReportCard from '../ReportCard.jsx';
 import { Typography } from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import Button from '@mui/material/Button';
 
-function Reports({ loading, reportsList, formData, reportData, handleDelete }) {
+function Reports({ loading, reportsList, formData, reportData, handleDelete, open, setOpen }) {
   const [empty, setEmpty] = useState(true);
 
   useEffect(() => {
@@ -13,8 +15,34 @@ function Reports({ loading, reportsList, formData, reportData, handleDelete }) {
     }
   }, [reportsList]);
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+
+  const action = (
+    <React.Fragment>
+    </React.Fragment>
+  );
+
   return (
     <Container>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        open={open}
+        autoHideDuration={3000}
+        message="Savings Report created"
+        action={action}
+        onClose={handleClose}
+      />
+
       <Grid container>
         {empty ? <Typography variant='h4'>It seems there's no savings reports created yet!</Typography> :
 

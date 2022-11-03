@@ -92,7 +92,7 @@ function Layout({ children, loggedIn, userName }) {
               <Typography>
                 {userName ? userName : 'Guest'}
               </Typography>
-              <Avatar src={userName ? 'https://source.unsplash.com/random' : ''} sx={classes.avatar} />
+              <Avatar src={userName ? 'https://images.unsplash.com/photo-1663580395169-914a11606e42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY2NTc2MDM2Mg&ixlib=rb-1.2.1&q=80&w=1080' : ''} sx={classes.avatar} />
             </Toolbar>
           </AppBar>
 

@@ -43,8 +43,8 @@ function App() {
     kwh: '',
   });
   const [location, setLocation] = useState({
-    lat: 33.5890841,
-    lon: -117.7171232,
+    lat: 33.652328,
+    lon: -117.686065,
   });
 
   const [reportData, setReportData] = useState({
@@ -93,72 +93,6 @@ function App() {
   const { firstName, lastName, email, password } = signData;
   const { lat, lon } = location;
 
-  function sumAll() {
-    let initialPrediction = 0;
-
-    // initial 500 to check how much is left to pay using monthly bill and energy monthly
-    Solar500.outputs.forEach((item) => {
-      initialPrediction += item.wh;
-    })
-
-    // monthly energy used
-    let kwhConsumption = 443;
-
-    // monthly electricty bill
-    let monthlyBill = 120;
-
-    // yearly energy used
-    let kwhYear = kwhConsumption * 12;
-
-
-    // divide initial by 1000 to convert from wh to kWh
-    let solarSize = kwhYear / (initialPrediction / 1000) * 500;
-    solarSize = Math.ceil(solarSize);
-
-    // cost of kwh
-    let costkWh = monthlyBill / kwhConsumption;
-
-    let annualSolar = 0;
-
-    // initial 500 to check how much is left to pay using monthly bill and energy monthly
-    FinalSolar.outputs.forEach((item) => {
-      annualSolar += item.wh;
-    })
-
-    // convert to kWh
-    annualSolar = annualSolar / 1000;
-    annualSolar = annualSolar * costkWh;
-
-    let panel300Qty = Math.ceil(solarSize / 300);
-    let panel500Qty = Math.ceil(solarSize / 500);
-
-    let inverter1kwQty = Math.ceil(solarSize * 0.82 / 1000);
-    let inverter2kwQty = Math.ceil(solarSize * 0.82 / 3000);
-
-    let trees = Math.floor(solarSize * 180 / 7000);
-
-
-    setReportData({
-      outputs: FinalSolar.outputs,
-      address: '16  Hawksmoor',
-      cost: '144',
-      kwh: '60',
-      trees,
-      initialPrediction,
-      kwhConsumption,
-      monthlyBill,
-      kwhYear,
-      solarSize,
-      costkWh,
-      annualSolar,
-      panel300Qty,
-      panel500Qty,
-      inverter1kwQty,
-      inverter2kwQty,
-    })
-
-  }
-
   useEffect(() => {
   }, []);
 
@@ -205,6 +139,7 @@ function App() {
     let newReport = await getUserReports(loginEmail);
 
     setReportsList(newReport);
+    setOpen(true);
     navigate('/reports');
 
   }
@@ -218,19 +153,19 @@ function App() {
 
   const createUserReport = async () => {
 
-    // let geo = await getLocation(formData.address);
+    let geo = await getGeoLocation(formData.address);
 
-    //let eng = await getData(location.lat, location.lon, 500);
+    let initialData = await getData(location.lat, location.lon, 500);
 
     let initialPrediction = 0;
 
     // initial 500 to check how much is left to pay using monthly bill and energy monthly
-    Solar500.outputs.forEach((item) => {
+    initialData.outputs.forEach((item) => {
       initialPrediction += item.wh;
     })
 
     // monthly energy used
-    let kwhConsumption = 443;
+    let kwhConsumption = 446;
 
     // monthly electricty bill
     let monthlyBill = 120;
@@ -243,7 +178,7 @@ function App() {
     let solarSize = kwhYear / (initialPrediction / 1000) * 500;
     solarSize = Math.ceil(solarSize);
 
-    //let finalPred = await getData(location.lat, location.lon, solarSize);
+    let finalPred = await getData(location.lat, location.lon, solarSize);
 
     // cost of kwh
     let costkWh = monthlyBill / kwhConsumption;
@@ -251,7 +186,7 @@ function App() {
     let annualSolar = 0;
 
     // initial 500 to check how much is left to pay using monthly bill and energy monthly
-    FinalSolar.outputs.forEach((item) => {
+    finalPred.outputs.forEach((item) => {
       annualSolar += item.wh;
     })
 
@@ -270,10 +205,10 @@ function App() {
 
     let data = {
       userEmail: loginEmail,
-      outputs: FinalSolar.outputs,
+      outputs: finalPred.outputs,
       address: '21402 Arborwood, Lake Forest',
-      cost: 144,
-      kwh: 60,
+      cost: 120,
+      kwh: 446,
       trees,
       initialPrediction,
       kwhConsumption,
@@ -290,7 +225,7 @@ function App() {
 
 
     await axios.post('http://localhost:5000/reports/create', data);
-    alert('created report');
+
   }
 
   const getUserReports = async (email) => {
@@ -358,7 +293,18 @@ function App() {
     });
   }
 
+  const getGeoLocation = async (address) => {
+    // let location = address;
+    const API_KEY = 'AIzaSyB1ofUAgDtm_9Br5XW4m511mCpETlvxqH8';
+
+    let response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`);
+
+    console.log('latitude \t', response.data.results[0].geometry.location.lat);
+    console.log('longitude \t', response.data.results[0].geometry.location.lng);
+  }
+
   const getLocation = async (address) => {
+
     const options = {
       method: 'GET',
       url: 'https://geocode-forward-and-reverse.p.rapidapi.com/forward',
@@ -368,6 +314,7 @@ function App() {
         'X-RapidAPI-Host': 'geocode-forward-and-reverse.p.rapidapi.com'
       }
     };
+
     let response = await axios.request(options);
     return response.data;
   }
@@ -380,7 +327,7 @@ function App() {
           <Route path="/" element={<Login handleSubmitLogin={handleSubmitLogin} handleChangeLogin={handleChangeLogin} loginData={loginData} />} />
           <Route path="/signup" element={<SignUp handleSubmitSign={handleSubmitSign} handleChangeSign={handleChangeSign} signData={signData} />} />
           <Route path="/create" element={<Create formData={formData} handleChange={handleChange} handleReportSubmit={handleReportSubmit} />} />
-          <Route path="/reports" element={<Reports reportsList={reportsList} formData={formData} reportData={reportData} loading={loading} handleDelete={handleDelete} />} />
+          <Route path="/reports" element={<Reports reportsList={reportsList} formData={formData} reportData={reportData} loading={loading} handleDelete={handleDelete} open={open} setOpen={setOpen} />} />
         </Routes>
       </Layout>
     </ThemeProvider >

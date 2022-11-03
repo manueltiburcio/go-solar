@@ -8,6 +8,7 @@ import Provided from './Report/Provided';
 import SolarPowerIcon from '@mui/icons-material/SolarPower';
 import ElectricMeterIcon from '@mui/icons-material/ElectricMeter';
 import ForestIcon from '@mui/icons-material/Forest';
+import Link from '@mui/material/Link';
 import {
   exportComponentAsJPEG,
 } from "react-component-export-image";
@@ -56,7 +57,7 @@ const classes = {
     justifyContent: 'center',
     flexDirection: 'column',
     paddingTop: 14,
-    paddingBottom: 11.5,
+    paddingBottom: 9,
   },
   powerIcon: {
     backgroundColor: '#f3ba2f',
@@ -98,7 +99,7 @@ function ReportCard({ reportData, handleDelete, id }) {
             <Card variant='outlined' sx={{ pb: 1.3 }}>
               <Typography variant='h5' sx={classes.cardHeader}>Results</Typography>
               <Typography sx={classes.cardContent} variant='h6' component='div'>
-                Solar panel capacity: {reportData.solarSize} Wh
+                Solar panel capacity: {reportData.solarSize} Wp
               </Typography>
               <Typography sx={classes.cardContent} variant='caption' color='textSecondary'>for 100% generation using solar energy</Typography>
               <CardContent sx={classes.cardContent}>
@@ -123,6 +124,7 @@ function ReportCard({ reportData, handleDelete, id }) {
             </Card>
 
             <Card variant='outlined' sx={{ pb: 1 }}>
+
               <CardContent>
                 <Typography variant='h5' component='div'>
                   Annual Savings <Box sx={{ color: '#50AF95', fontWeight: 'bold', display: 'inline-block' }}>$ USD {Number(reportData.annualSolar).toFixed(2)}</Box>
@@ -161,7 +163,7 @@ function ReportCard({ reportData, handleDelete, id }) {
                     <Grid container>
                       <Grid item xs>
                         <Typography variant='body2' component='div'>
-                          {reportData.panel300Qty} panels <br></br> of 300Wp
+                          <Box sx={{ fontWeight: 'bold', display: 'inline-block' }}>{reportData.panel300Qty} panels</Box> <br></br> of 300Wp
                         </Typography>
                       </Grid>
                       <Divider orientation="vertical" flexItem >
@@ -169,7 +171,7 @@ function ReportCard({ reportData, handleDelete, id }) {
                       </Divider>
                       <Grid item xs>
                         <Typography variant='body2' component='div' ml={2}>
-                          {reportData.panel500Qty} panels <br></br> of 500Wp
+                          <Box sx={{ fontWeight: 'bold', display: 'inline-block' }}>{reportData.panel500Qty} panels</Box> <br></br> of 500Wp
                         </Typography>
                       </Grid>
                     </Grid>
@@ -184,7 +186,6 @@ function ReportCard({ reportData, handleDelete, id }) {
                   </Grid>
 
                   <Grid item xs={7}>
-
                     <CardHeader sx={{ mb: 1 }}
                       avatar={
                         <Avatar
@@ -199,7 +200,7 @@ function ReportCard({ reportData, handleDelete, id }) {
                     <Grid container mb={2}>
                       <Grid item xs>
                         <Typography variant='body2' component='div'>
-                          {reportData.inverter1kwQty} inverters <br></br> of 1 kW
+                          <Box sx={{ fontWeight: 'bold', display: 'inline-block' }}>{reportData.inverter1kwQty} inverters</Box> <br></br> of 1 kW
                         </Typography>
                       </Grid>
                       <Divider orientation="vertical" flexItem>
@@ -207,7 +208,7 @@ function ReportCard({ reportData, handleDelete, id }) {
                       </Divider>
                       <Grid item xs>
                         <Typography variant='body2' component='div' ml={2}>
-                          {reportData.inverter3kwQty} inverters <br></br> of 2 kW
+                          <Box sx={{ fontWeight: 'bold', display: 'inline-block' }}>{reportData.inverter3kwQty} inverters</Box> <br></br> of 2 kW
                         </Typography>
                       </Grid>
                     </Grid>
@@ -237,17 +238,20 @@ function ReportCard({ reportData, handleDelete, id }) {
                 <Avatar sx={{ backgroundColor: '#50AF95' }} ><ForestIcon /></Avatar>
               </AvatarGroup>
               <Typography textAlign='center' variant='h6'>This solar system offsets <br></br> carbon emission equivalent of {reportData.trees}  trees</Typography>
+              <Typography textAlign='center' variant='caption' color='textSecondary' component='div'>
+                Estimations per <Link target="_blank" href="https://pv-magazine-usa.com/2022/07/08/just-one-solar-panel-offsets-the-carbon-emissions-equivalent-of-ten-trees/">PV Magazine USA</Link>, July 2022
+              </Typography>
             </Card>
           </Grid>
 
         </Grid>
         <CardActions>
           <Typography textAlign='center' variant='caption' color='textSecondary' component='div'>
-            Report created on {reportData.createdAt.slice(0, 10)}
+            Report created on 2022-10-14
           </Typography>
           <br></br>
           <Button sx={{ ml: 4 }} size='small' color='secondary' startIcon={<SaveAltIcon />}
-            onClick={() => exportComponentAsJPEG(elementRef, { fileName: `${reportData.createdAt.slice(0, 10)}-report` })}
+            onClick={() => exportComponentAsJPEG(elementRef, { fileName: `2022-10-14-report` })}
           >Download report</Button>
         </CardActions>
       </Card>

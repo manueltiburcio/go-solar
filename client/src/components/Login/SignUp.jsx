@@ -87,7 +87,7 @@ export default function SignUp({ handleSubmitSign, handleChangeSign, signData, }
       <div className={classes.overlay}></div>
       <video className={classes.video} src={videoBg} autoPlay loop muted />
       <Box sx={classes.form}>
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+        <Avatar sx={{ m: 1, bgcolor: '#2E3B55' }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
