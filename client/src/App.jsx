@@ -50,9 +50,9 @@ function App() {
   const [reportData, setReportData] = useState({
     userEmail: '',
     outputs: [],
-    address: '16  Hawksmoor',
-    cost: '144',
-    kwh: '60',
+    address: '',
+    cost: '',
+    kwh: '',
     trees: '',
     initialPrediction: 0,
     kwhConsumption: 0,
@@ -294,7 +294,7 @@ function App() {
   }
 
   const getGeoLocation = async (address) => {
-    // let location = address;
+
     const API_KEY = process.env.REACT_APP_GOOGLE_KEY;
 
     let response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`);
@@ -315,7 +315,7 @@ function App() {
       url: 'https://geocode-forward-and-reverse.p.rapidapi.com/forward',
       params: { address: address },
       headers: {
-        'X-RapidAPI-Key': '8773cbcb94msh62d3e6b171ddb4cp1774bajsn6dc6e8b83dda',
+        'X-RapidAPI-Key': '',
         'X-RapidAPI-Host': 'geocode-forward-and-reverse.p.rapidapi.com'
       }
     };
