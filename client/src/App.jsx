@@ -165,10 +165,10 @@ function App() {
     })
 
     // monthly energy used
-    let kwhConsumption = 446;
+    let kwhConsumption = parseInt(kwh);
 
     // monthly electricty bill
-    let monthlyBill = 120;
+    let monthlyBill = parseInt(cost);
 
     // yearly energy used
     let kwhYear = kwhConsumption * 12;
@@ -206,9 +206,9 @@ function App() {
     let data = {
       userEmail: loginEmail,
       outputs: finalPred.outputs,
-      address: '21402 Arborwood, Lake Forest',
-      cost: 120,
-      kwh: 446,
+      address,
+      cost,
+      kwh,
       trees,
       initialPrediction,
       kwhConsumption,
@@ -254,7 +254,7 @@ function App() {
         loss: '14'
       },
       headers: {
-        'X-RapidAPI-Key': '8773cbcb94msh62d3e6b171ddb4cp1774bajsn6dc6e8b83dda',
+        'X-RapidAPI-Key': `${process.env.REACT_APP_PREDICTION_KEY}`,
         'X-RapidAPI-Host': 'solarenergyprediction.p.rapidapi.com'
       }
 
@@ -295,9 +295,14 @@ function App() {
 
   const getGeoLocation = async (address) => {
     // let location = address;
-    const API_KEY = 'AIzaSyB1ofUAgDtm_9Br5XW4m511mCpETlvxqH8';
+    const API_KEY = process.env.REACT_APP_GOOGLE_KEY;
 
     let response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`);
+
+    setLocation({
+      lat: response.data.results[0].geometry.location.lat,
+      lon: response.data.results[0].geometry.location.lng
+    });
 
     console.log('latitude \t', response.data.results[0].geometry.location.lat);
     console.log('longitude \t', response.data.results[0].geometry.location.lng);

@@ -3,8 +3,8 @@ import { Avatar, Container, Grid, Card, CardHeader, CardContent, CardActions, Ty
 import AvatarGroup from '@mui/material/AvatarGroup';
 import { DeleteOutline } from '@mui/icons-material';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import BarChart from './Report/BarChart';
-import Provided from './Report/Provided';
+import BarChart from './Charts/BarChart';
+import Provided from './Charts/Provided';
 import SolarPowerIcon from '@mui/icons-material/SolarPower';
 import ElectricMeterIcon from '@mui/icons-material/ElectricMeter';
 import ForestIcon from '@mui/icons-material/Forest';
