@@ -28,7 +28,7 @@ Go Solar is a website that estimates the annual savings that you can get by inve
 * All reports are saved on the user account.
 
 # Demo
-<img src="https://i.ibb.co/1rHptks/Screen-Shot-2022-10-18-at-3-45-28-PM.png" width="1400">
+<img src="https://i.ibb.co/S0FfcSX/go-solar.jpg" width="1400">
 <img src="https://i.ibb.co/CPmpzd4/Screen-Shot-2022-10-18-at-3-51-06-PM.png" width="1400">
 <img src="https://i.ibb.co/1zCkfHS/Screen-Shot-2022-10-18-at-3-47-32-PM.png" width="1400">
 
